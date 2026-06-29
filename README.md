@@ -32,7 +32,7 @@ The first MVP can be built as a local-first web or mobile app with:
 
 ## Current Prototype
 
-The working MVP prototype now includes `Routine Playbooks` and `Recurring Costs`. Open `index.html` in a browser to use it.
+The working MVP prototype now includes `Routine Playbooks`, `Kitchen Now`, and `Recurring Costs`. Open `index.html` in a browser to use it.
 
 Routine Playbooks currently supports:
 
@@ -53,6 +53,18 @@ Recurring Costs currently supports:
 - Soon, trial, and review filters
 - Browser-local persistence with `localStorage`
 
+Kitchen Now currently supports:
+
+- Manual ingredient entry
+- Edit and delete ingredients
+- Built-in example ingredients
+- Time, effort, diet, spice, and tool constraints
+- Rule-based meal suggestions
+- Available and missing ingredient chips
+- Shopping gap view
+- Saved and dismissed meal ideas
+- Browser-local persistence with `localStorage`
+
 ## Project Structure
 
 ```text
@@ -71,7 +83,7 @@ docs/
 
 ## Next Step
 
-Add the `Kitchen Now` module, then turn the static prototype into a production app shell with tests, routing, and a durable storage layer.
+Turn the static prototype into a production app shell with tests, routing, and a durable storage layer.
 
 ## Development Process
 

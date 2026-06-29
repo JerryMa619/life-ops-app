@@ -15,6 +15,7 @@
 
       <nav class="module-tabs" aria-label="LifeOps modules">
         <button class="module-tab active" type="button" data-module="playbooks">Playbooks</button>
+        <button class="module-tab" type="button" data-module="kitchen">Kitchen</button>
         <button class="module-tab" type="button" data-module="costs">Costs</button>
       </nav>
 
@@ -128,6 +129,152 @@
             </div>
 
             <div class="list" id="playbookList" aria-live="polite"></div>
+          </section>
+        </section>
+      </section>
+
+      <section class="module-view hidden" id="kitchenView" aria-label="Kitchen Now">
+        <section class="summary-band" aria-label="Kitchen summary">
+          <article class="metric">
+            <span class="metric-label">Ingredients</span>
+            <strong id="ingredientCount">0</strong>
+            <small>Available right now</small>
+          </article>
+          <article class="metric">
+            <span class="metric-label">Expiring soon</span>
+            <strong id="expiringSoonCount">0</strong>
+            <small>Use within 3 days</small>
+          </article>
+          <article class="metric">
+            <span class="metric-label">Meal matches</span>
+            <strong id="mealMatchCount">0</strong>
+            <small>Top realistic options</small>
+          </article>
+          <article class="metric">
+            <span class="metric-label">Shopping gaps</span>
+            <strong id="shoppingGapCount">0</strong>
+            <small>Missing items in suggestions</small>
+          </article>
+        </section>
+
+        <section class="workspace-grid">
+          <aside class="editor-panel" aria-label="Kitchen editor">
+            <div class="panel-heading">
+              <h2 id="ingredientFormTitle">Add ingredient</h2>
+              <button class="text-button" id="resetIngredientFormButton" type="button">Reset</button>
+            </div>
+
+            <form id="ingredientForm">
+              <input id="ingredientId" type="hidden">
+
+              <label>
+                Ingredient
+                <input id="ingredientName" name="name" type="text" placeholder="Eggs, spinach, rice" required>
+              </label>
+
+              <div class="form-row">
+                <label>
+                  Category
+                  <select id="ingredientCategory" name="category">
+                    <option value="Protein">Protein</option>
+                    <option value="Vegetable">Vegetable</option>
+                    <option value="Grain">Grain</option>
+                    <option value="Dairy">Dairy</option>
+                    <option value="Pantry">Pantry</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </label>
+                <label>
+                  Location
+                  <select id="ingredientLocation" name="location">
+                    <option value="Fridge">Fridge</option>
+                    <option value="Freezer">Freezer</option>
+                    <option value="Pantry">Pantry</option>
+                    <option value="Counter">Counter</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="form-row">
+                <label>
+                  Quantity
+                  <input id="quantityLabel" name="quantityLabel" type="text" placeholder="6, half bag, 200g">
+                </label>
+                <label>
+                  Expires
+                  <input id="expiresAt" name="expiresAt" type="date">
+                </label>
+              </div>
+
+              <button class="primary-button" type="submit">Save ingredient</button>
+            </form>
+
+            <div class="constraint-panel" aria-label="Meal constraints">
+              <h2>Meal constraints</h2>
+              <div class="form-row">
+                <label>
+                  Time
+                  <select id="maxTimeMinutes">
+                    <option value="15">15 min</option>
+                    <option value="30" selected>30 min</option>
+                    <option value="45">45 min</option>
+                    <option value="60">60 min</option>
+                  </select>
+                </label>
+                <label>
+                  Effort
+                  <select id="effortLevel">
+                    <option value="any">Any</option>
+                    <option value="easy">Low effort</option>
+                  </select>
+                </label>
+              </div>
+              <div class="form-row">
+                <label>
+                  Diet
+                  <select id="dietMode">
+                    <option value="any">Any</option>
+                    <option value="vegetarian">Vegetarian</option>
+                  </select>
+                </label>
+                <label>
+                  Spice
+                  <select id="spiceMode">
+                    <option value="any">Any</option>
+                    <option value="mild">Mild</option>
+                    <option value="spicy">Spicy ok</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="tool-grid" aria-label="Available tools">
+                <label class="tool-toggle"><input type="checkbox" name="kitchenTools" value="pan" checked> Pan</label>
+                <label class="tool-toggle"><input type="checkbox" name="kitchenTools" value="pot" checked> Pot</label>
+                <label class="tool-toggle"><input type="checkbox" name="kitchenTools" value="oven"> Oven</label>
+                <label class="tool-toggle"><input type="checkbox" name="kitchenTools" value="microwave"> Microwave</label>
+              </div>
+            </div>
+
+            <div class="ingredient-list-shell">
+              <h2>Current ingredients</h2>
+              <div class="ingredient-list" id="ingredientList"></div>
+            </div>
+          </aside>
+
+          <section class="main-panel" aria-label="Meal suggestions">
+            <div class="toolbar">
+              <div>
+                <h2>Meal suggestions</h2>
+                <p id="kitchenSubcopy">Three realistic options based on what you have.</p>
+              </div>
+              <div class="filters" aria-label="Kitchen filters">
+                <button class="filter-button active" data-kitchen-filter="suggestions" type="button">Suggestions</button>
+                <button class="filter-button" data-kitchen-filter="saved" type="button">Saved</button>
+                <button class="filter-button" data-kitchen-filter="gaps" type="button">Gaps</button>
+              </div>
+            </div>
+
+            <div class="list" id="mealList" aria-live="polite"></div>
           </section>
         </section>
       </section>

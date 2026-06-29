@@ -1,6 +1,9 @@
 const COST_STORAGE_KEY = "lifeops.recurringCosts.v1";
 const PLAYBOOK_STORAGE_KEY = "lifeops.playbooks.v1";
 const RUN_STORAGE_KEY = "lifeops.playbookRuns.v1";
+const INGREDIENT_STORAGE_KEY = "lifeops.ingredients.v1";
+const SAVED_MEAL_STORAGE_KEY = "lifeops.savedMeals.v1";
+const DISMISSED_MEAL_STORAGE_KEY = "lifeops.dismissedMeals.v1";
 
 const today = new Date();
 today.setHours(0, 0, 0, 0);
@@ -117,11 +120,89 @@ const seedCosts = [
   }
 ];
 
+const seedIngredients = [
+  ingredient("ingredient-eggs", "Eggs", "Protein", "6", offsetDate(5), "Fridge"),
+  ingredient("ingredient-spinach", "Spinach", "Vegetable", "half bag", offsetDate(2), "Fridge"),
+  ingredient("ingredient-rice", "Rice", "Grain", "1 bag", "", "Pantry"),
+  ingredient("ingredient-tofu", "Tofu", "Protein", "1 block", offsetDate(4), "Fridge"),
+  ingredient("ingredient-pasta", "Pasta", "Grain", "500g", "", "Pantry"),
+  ingredient("ingredient-tomato", "Tomato", "Vegetable", "3", offsetDate(3), "Counter"),
+  ingredient("ingredient-yogurt", "Yogurt", "Dairy", "1 tub", offsetDate(6), "Fridge"),
+  ingredient("ingredient-tortilla", "Tortilla", "Grain", "4 wraps", offsetDate(7), "Pantry")
+];
+
+const mealIdeas = [
+  meal("meal-spinach-eggs", "Spinach eggs over rice", ["eggs", "spinach", "rice"], ["soy sauce", "spring onion"], 18, "easy", ["pan"], ["vegetarian", "mild", "low-effort"], [
+    "Warm rice.",
+    "Wilt spinach in a pan.",
+    "Scramble or fry eggs and serve over rice."
+  ]),
+  meal("meal-tofu-rice", "Crispy tofu rice bowl", ["tofu", "rice"], ["spinach", "tomato", "soy sauce"], 25, "easy", ["pan"], ["vegetarian", "mild", "low-effort"], [
+    "Cube tofu and crisp it in a pan.",
+    "Serve with rice.",
+    "Add vegetables and a simple sauce."
+  ]),
+  meal("meal-tomato-pasta", "Tomato pantry pasta", ["pasta", "tomato"], ["yogurt", "spinach", "garlic"], 22, "easy", ["pot", "pan"], ["vegetarian", "mild", "low-effort"], [
+    "Boil pasta.",
+    "Cook tomatoes into a quick sauce.",
+    "Fold together with optional greens."
+  ]),
+  meal("meal-wrap", "Quick egg and spinach wrap", ["eggs", "spinach", "tortilla"], ["yogurt", "tomato"], 15, "easy", ["pan"], ["vegetarian", "mild", "low-effort"], [
+    "Scramble eggs with spinach.",
+    "Warm tortilla.",
+    "Add yogurt or tomato and wrap."
+  ]),
+  meal("meal-yogurt-bowl", "Savory yogurt rice bowl", ["yogurt", "rice"], ["eggs", "tomato", "spinach"], 12, "easy", ["microwave"], ["vegetarian", "mild", "low-effort"], [
+    "Warm rice.",
+    "Top with yogurt and chopped vegetables.",
+    "Add egg if available."
+  ]),
+  meal("meal-fried-rice", "Flexible fried rice", ["rice", "eggs"], ["tofu", "spinach", "tomato"], 20, "easy", ["pan"], ["vegetarian", "mild", "low-effort"], [
+    "Fry rice in a pan.",
+    "Add eggs and available vegetables.",
+    "Season with pantry sauce."
+  ]),
+  meal("meal-baked-pasta", "Baked pasta reset", ["pasta", "tomato"], ["yogurt", "spinach"], 45, "medium", ["oven", "pot"], ["vegetarian", "mild"], [
+    "Boil pasta until just tender.",
+    "Mix with tomato and yogurt.",
+    "Bake until the top is set."
+  ]),
+  meal("meal-spicy-tofu", "Spicy tofu wraps", ["tofu", "tortilla"], ["spinach", "tomato", "yogurt"], 25, "easy", ["pan"], ["vegetarian", "spicy", "low-effort"], [
+    "Crisp tofu with spice.",
+    "Warm tortillas.",
+    "Add vegetables and yogurt."
+  ]),
+  meal("meal-tomato-eggs", "Tomato egg bowl", ["tomato", "eggs", "rice"], ["spinach"], 18, "easy", ["pan"], ["vegetarian", "mild", "low-effort"], [
+    "Cook tomatoes until saucy.",
+    "Fold in eggs.",
+    "Serve over rice."
+  ]),
+  meal("meal-pasta-frittata", "Pasta frittata", ["pasta", "eggs"], ["spinach", "tomato"], 28, "medium", ["pan"], ["vegetarian", "mild"], [
+    "Mix cooked pasta with eggs.",
+    "Add vegetables.",
+    "Cook slowly until set."
+  ]),
+  meal("meal-spinach-soup", "Spinach and rice soup", ["spinach", "rice"], ["tofu", "eggs"], 30, "easy", ["pot"], ["vegetarian", "mild", "low-effort"], [
+    "Simmer rice in broth or water.",
+    "Add spinach near the end.",
+    "Finish with tofu or egg."
+  ]),
+  meal("meal-loaded-tortilla", "Loaded tortilla pizza", ["tortilla", "tomato"], ["spinach", "eggs", "yogurt"], 20, "easy", ["oven"], ["vegetarian", "mild"], [
+    "Top tortilla with tomato and vegetables.",
+    "Bake until crisp.",
+    "Add yogurt after baking."
+  ])
+];
+
 const state = {
   module: "playbooks",
   playbooks: loadCollection(PLAYBOOK_STORAGE_KEY),
   runs: loadCollection(RUN_STORAGE_KEY),
   playbookFilter: "all",
+  ingredients: loadCollection(INGREDIENT_STORAGE_KEY),
+  savedMealIds: loadCollection(SAVED_MEAL_STORAGE_KEY),
+  dismissedMealIds: loadCollection(DISMISSED_MEAL_STORAGE_KEY),
+  kitchenFilter: "suggestions",
   costs: loadCollection(COST_STORAGE_KEY),
   costFilter: "all"
 };
@@ -142,12 +223,19 @@ const repeatLabels = {
   yearly: "Yearly"
 };
 
+const moduleTitles = {
+  playbooks: "Routine Playbooks",
+  kitchen: "Kitchen Now",
+  costs: "Recurring Costs"
+};
+
 const elements = {
   appTitle: document.querySelector("#appTitle"),
   moduleTabs: document.querySelectorAll(".module-tab"),
   seedButton: document.querySelector("#seedButton"),
   clearButton: document.querySelector("#clearButton"),
   playbooksView: document.querySelector("#playbooksView"),
+  kitchenView: document.querySelector("#kitchenView"),
   costsView: document.querySelector("#costsView"),
   emptyTemplate: document.querySelector("#emptyTemplate"),
 
@@ -162,6 +250,20 @@ const elements = {
   playbookDueSoonCount: document.querySelector("#playbookDueSoonCount"),
   completionAverage: document.querySelector("#completionAverage"),
   playbookFilters: document.querySelectorAll("[data-playbook-filter]"),
+
+  ingredientForm: document.querySelector("#ingredientForm"),
+  ingredientId: document.querySelector("#ingredientId"),
+  ingredientFormTitle: document.querySelector("#ingredientFormTitle"),
+  resetIngredientFormButton: document.querySelector("#resetIngredientFormButton"),
+  ingredientList: document.querySelector("#ingredientList"),
+  ingredientCount: document.querySelector("#ingredientCount"),
+  expiringSoonCount: document.querySelector("#expiringSoonCount"),
+  mealMatchCount: document.querySelector("#mealMatchCount"),
+  shoppingGapCount: document.querySelector("#shoppingGapCount"),
+  kitchenSubcopy: document.querySelector("#kitchenSubcopy"),
+  mealList: document.querySelector("#mealList"),
+  kitchenFilters: document.querySelectorAll("[data-kitchen-filter]"),
+  kitchenControls: document.querySelectorAll("#maxTimeMinutes, #effortLevel, #dietMode, #spiceMode, [name='kitchenTools']"),
 
   costForm: document.querySelector("#costForm"),
   costId: document.querySelector("#costId"),
@@ -193,6 +295,19 @@ elements.playbookFilters.forEach((button) => {
   });
 });
 
+elements.ingredientForm.addEventListener("submit", saveIngredientFromForm);
+elements.resetIngredientFormButton.addEventListener("click", resetIngredientForm);
+elements.kitchenFilters.forEach((button) => {
+  button.addEventListener("click", () => {
+    state.kitchenFilter = button.dataset.kitchenFilter;
+    elements.kitchenFilters.forEach((item) => item.classList.toggle("active", item === button));
+    renderKitchen();
+  });
+});
+elements.kitchenControls.forEach((control) => {
+  control.addEventListener("change", renderKitchen);
+});
+
 elements.costForm.addEventListener("submit", saveCostFromForm);
 elements.resetCostFormButton.addEventListener("click", resetCostForm);
 elements.costFilters.forEach((button) => {
@@ -204,6 +319,7 @@ elements.costFilters.forEach((button) => {
 });
 
 resetPlaybookForm();
+resetIngredientForm();
 resetCostForm();
 render();
 
@@ -213,8 +329,9 @@ function switchModule(moduleName) {
     button.classList.toggle("active", button.dataset.module === moduleName);
   });
   elements.playbooksView.classList.toggle("hidden", moduleName !== "playbooks");
+  elements.kitchenView.classList.toggle("hidden", moduleName !== "kitchen");
   elements.costsView.classList.toggle("hidden", moduleName !== "costs");
-  elements.appTitle.textContent = moduleName === "playbooks" ? "Routine Playbooks" : "Recurring Costs";
+  elements.appTitle.textContent = moduleTitles[moduleName];
 }
 
 function loadExamples() {
@@ -222,6 +339,14 @@ function loadExamples() {
     state.playbooks = mergeById(state.playbooks, seedPlaybooks);
     persistPlaybooks();
     renderPlaybooks();
+    return;
+  }
+
+  if (state.module === "kitchen") {
+    state.ingredients = mergeById(state.ingredients, seedIngredients);
+    state.dismissedMealIds = [];
+    persistKitchen();
+    renderKitchen();
     return;
   }
 
@@ -240,6 +365,16 @@ function clearCurrentModule() {
     return;
   }
 
+  if (state.module === "kitchen") {
+    state.ingredients = [];
+    state.savedMealIds = [];
+    state.dismissedMealIds = [];
+    persistKitchen();
+    resetIngredientForm();
+    renderKitchen();
+    return;
+  }
+
   state.costs = [];
   persistCosts();
   resetCostForm();
@@ -248,6 +383,7 @@ function clearCurrentModule() {
 
 function render() {
   renderPlaybooks();
+  renderKitchen();
   renderCosts();
   switchModule(state.module);
 }
@@ -561,6 +697,341 @@ function playbookCopy(count) {
   return `${count} matching playbook${count === 1 ? "" : "s"} in this view.`;
 }
 
+function saveIngredientFromForm(event) {
+  event.preventDefault();
+
+  const data = new FormData(elements.ingredientForm);
+  const id = elements.ingredientId.value || `ingredient-${Date.now()}`;
+  const item = {
+    id,
+    name: clean(data.get("name")),
+    category: data.get("category"),
+    quantityLabel: clean(data.get("quantityLabel")),
+    expiresAt: data.get("expiresAt"),
+    location: data.get("location")
+  };
+
+  const existingIndex = state.ingredients.findIndex((ingredientItem) => ingredientItem.id === id);
+  if (existingIndex >= 0) state.ingredients[existingIndex] = item;
+  else state.ingredients.push(item);
+
+  persistKitchen();
+  resetIngredientForm();
+  renderKitchen();
+}
+
+function resetIngredientForm() {
+  elements.ingredientForm.reset();
+  elements.ingredientId.value = "";
+  elements.ingredientFormTitle.textContent = "Add ingredient";
+  document.querySelector("#ingredientCategory").value = "Protein";
+  document.querySelector("#ingredientLocation").value = "Fridge";
+  document.querySelector("#expiresAt").value = offsetDate(5);
+}
+
+function renderKitchen() {
+  const suggestions = getMealSuggestions();
+  const gaps = shoppingGaps(suggestions);
+  const expiringSoon = state.ingredients.filter((item) => item.expiresAt && daysUntil(item.expiresAt) <= 3).length;
+
+  elements.ingredientCount.textContent = String(state.ingredients.length);
+  elements.expiringSoonCount.textContent = String(expiringSoon);
+  elements.mealMatchCount.textContent = String(suggestions.length);
+  elements.shoppingGapCount.textContent = String(gaps.length);
+
+  renderIngredientList();
+  renderMealList(suggestions, gaps);
+}
+
+function renderIngredientList() {
+  elements.ingredientList.replaceChildren();
+
+  if (state.ingredients.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "muted-note";
+    empty.textContent = "No ingredients yet.";
+    elements.ingredientList.append(empty);
+    return;
+  }
+
+  state.ingredients
+    .slice()
+    .sort((a, b) => ingredientSortValue(a) - ingredientSortValue(b))
+    .forEach((item) => {
+      const chip = document.createElement("article");
+      chip.className = "ingredient-card";
+      chip.innerHTML = `
+        <div>
+          <strong>${escapeHtml(item.name)}</strong>
+          <span>${escapeHtml(ingredientMeta(item))}</span>
+        </div>
+        <div class="cost-actions">
+          <button class="mini-button" type="button" data-ingredient-action="edit" data-id="${item.id}" title="Edit" aria-label="Edit">e</button>
+          <button class="mini-button danger" type="button" data-ingredient-action="delete" data-id="${item.id}" title="Delete" aria-label="Delete">x</button>
+        </div>
+      `;
+      chip.addEventListener("click", handleIngredientAction);
+      elements.ingredientList.append(chip);
+    });
+}
+
+function renderMealList(suggestions, gaps) {
+  elements.mealList.replaceChildren();
+
+  if (state.kitchenFilter === "gaps") {
+    renderShoppingGaps(gaps);
+    return;
+  }
+
+  const mealsToRender = state.kitchenFilter === "saved"
+    ? mealIdeas
+      .filter((mealIdea) => state.savedMealIds.includes(mealIdea.id))
+      .map((mealIdea) => buildSuggestion(mealIdea))
+      .sort((a, b) => b.matchScore - a.matchScore)
+    : suggestions;
+
+  elements.kitchenSubcopy.textContent = kitchenCopy(mealsToRender.length);
+
+  if (mealsToRender.length === 0) {
+    elements.mealList.append(elements.emptyTemplate.content.cloneNode(true));
+    return;
+  }
+
+  mealsToRender.forEach((suggestion) => {
+    const mealIdea = suggestion.meal;
+    const card = document.createElement("article");
+    card.className = "cost-card meal-card";
+    card.innerHTML = `
+      <div class="cost-main">
+        <div class="cost-title-row">
+          <h3>${escapeHtml(mealIdea.title)}</h3>
+          <span class="badge active">${mealIdea.timeMinutes} min</span>
+          <span class="badge">${escapeHtml(mealIdea.difficulty)}</span>
+          ${mealIdea.tags.includes("vegetarian") ? '<span class="badge active">vegetarian</span>' : ""}
+          ${mealIdea.tags.includes("spicy") ? '<span class="badge trial">spicy</span>' : ""}
+        </div>
+        <div class="cost-meta">
+          <span>${suggestion.availableIngredients.length} available</span>
+          <span>${suggestion.missingIngredients.length} missing</span>
+          <span>${suggestion.matchScore}% fit</span>
+        </div>
+        <p class="cost-note">${escapeHtml(suggestion.reason)}</p>
+        <div class="chip-row">
+          ${suggestion.availableIngredients.map((item) => `<span class="chip available">${escapeHtml(item)}</span>`).join("")}
+          ${suggestion.missingIngredients.map((item) => `<span class="chip missing">${escapeHtml(item)}</span>`).join("")}
+        </div>
+        <ol class="instruction-list">
+          ${mealIdea.instructions.map((instruction) => `<li>${escapeHtml(instruction)}</li>`).join("")}
+        </ol>
+      </div>
+      <div class="cost-side">
+        <div class="cost-amount">
+          <strong>${suggestion.matchScore}%</strong>
+          <span>match score</span>
+        </div>
+        <div class="button-stack">
+          <button class="small-command" type="button" data-meal-action="save" data-id="${mealIdea.id}">${state.savedMealIds.includes(mealIdea.id) ? "Saved" : "Save"}</button>
+          <button class="small-command danger" type="button" data-meal-action="dismiss" data-id="${mealIdea.id}">Dismiss</button>
+        </div>
+      </div>
+    `;
+
+    card.addEventListener("click", handleMealAction);
+    elements.mealList.append(card);
+  });
+}
+
+function renderShoppingGaps(gaps) {
+  elements.kitchenSubcopy.textContent = gaps.length
+    ? `${gaps.length} missing item${gaps.length === 1 ? "" : "s"} across current suggestions.`
+    : "No shopping gaps in the current suggestions.";
+
+  if (gaps.length === 0) {
+    elements.mealList.append(elements.emptyTemplate.content.cloneNode(true));
+    return;
+  }
+
+  gaps.forEach((gap) => {
+    const card = document.createElement("article");
+    card.className = "cost-card";
+    card.innerHTML = `
+      <div class="cost-main">
+        <div class="cost-title-row">
+          <h3>${escapeHtml(gap.name)}</h3>
+          <span class="badge soon">missing</span>
+        </div>
+        <div class="cost-meta">
+          <span>${gap.count} suggestion${gap.count === 1 ? "" : "s"}</span>
+          <span>${escapeHtml(gap.meals.join(", "))}</span>
+        </div>
+      </div>
+      <div class="cost-side">
+        <button class="small-command" type="button" data-gap-action="add" data-name="${escapeAttribute(gap.name)}">Add</button>
+      </div>
+    `;
+    card.addEventListener("click", handleGapAction);
+    elements.mealList.append(card);
+  });
+}
+
+function handleIngredientAction(event) {
+  const control = event.target.closest("[data-ingredient-action]");
+  if (!control) return;
+
+  const item = state.ingredients.find((ingredientItem) => ingredientItem.id === control.dataset.id);
+  if (!item) return;
+
+  if (control.dataset.ingredientAction === "edit") fillIngredientForm(item);
+  if (control.dataset.ingredientAction === "delete") {
+    state.ingredients = state.ingredients.filter((ingredientItem) => ingredientItem.id !== item.id);
+    persistKitchen();
+    renderKitchen();
+  }
+}
+
+function handleMealAction(event) {
+  const control = event.target.closest("[data-meal-action]");
+  if (!control) return;
+
+  if (control.dataset.mealAction === "save") {
+    state.savedMealIds = unique([...state.savedMealIds, control.dataset.id]);
+    state.dismissedMealIds = state.dismissedMealIds.filter((mealId) => mealId !== control.dataset.id);
+  }
+
+  if (control.dataset.mealAction === "dismiss") {
+    state.dismissedMealIds = unique([...state.dismissedMealIds, control.dataset.id]);
+    state.savedMealIds = state.savedMealIds.filter((mealId) => mealId !== control.dataset.id);
+  }
+
+  persistKitchen();
+  renderKitchen();
+}
+
+function handleGapAction(event) {
+  const control = event.target.closest("[data-gap-action]");
+  if (!control) return;
+
+  const name = clean(control.dataset.name);
+  if (!name) return;
+
+  state.ingredients.push(ingredient(`ingredient-${Date.now()}`, name, "Other", "", "", "Pantry"));
+  persistKitchen();
+  renderKitchen();
+}
+
+function fillIngredientForm(item) {
+  elements.ingredientId.value = item.id;
+  elements.ingredientFormTitle.textContent = "Edit ingredient";
+  document.querySelector("#ingredientName").value = item.name;
+  document.querySelector("#ingredientCategory").value = item.category;
+  document.querySelector("#quantityLabel").value = item.quantityLabel || "";
+  document.querySelector("#expiresAt").value = item.expiresAt || "";
+  document.querySelector("#ingredientLocation").value = item.location;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function getMealSuggestions() {
+  return mealIdeas
+    .filter((mealIdea) => !state.dismissedMealIds.includes(mealIdea.id))
+    .map((mealIdea) => buildSuggestion(mealIdea))
+    .filter((suggestion) => suggestion.allowed)
+    .sort((a, b) => b.matchScore - a.matchScore)
+    .slice(0, 3);
+}
+
+function buildSuggestion(mealIdea) {
+  const constraints = readKitchenConstraints();
+  const required = mealIdea.requiredIngredients;
+  const optional = mealIdea.optionalIngredients;
+  const availableRequired = required.filter(hasIngredient);
+  const missingIngredients = required.filter((name) => !hasIngredient(name));
+  const availableOptional = optional.filter(hasIngredient);
+  const expiringUsed = [...availableRequired, ...availableOptional].filter((name) => {
+    const item = findIngredientByName(name);
+    return item && item.expiresAt && daysUntil(item.expiresAt) <= 3;
+  });
+  const missingTools = mealIdea.tools.filter((tool) => !constraints.tools.includes(tool));
+  const blockedByDiet = constraints.dietMode === "vegetarian" && !mealIdea.tags.includes("vegetarian");
+  const blockedBySpice = constraints.spiceMode === "mild" && mealIdea.tags.includes("spicy");
+  const blockedByEffort = constraints.effortLevel === "easy" && mealIdea.difficulty !== "easy";
+  const blockedByTime = mealIdea.timeMinutes > constraints.maxTimeMinutes;
+  const blockedByTools = missingTools.length > 0;
+  const allowed = !blockedByDiet && !blockedBySpice && !blockedByEffort && !blockedByTime && !blockedByTools && missingIngredients.length <= 2;
+  const baseScore = Math.round((availableRequired.length / required.length) * 70);
+  const optionalScore = Math.min(15, availableOptional.length * 5);
+  const expiryScore = Math.min(10, expiringUsed.length * 5);
+  const timeScore = mealIdea.timeMinutes <= constraints.maxTimeMinutes ? 5 : 0;
+  const penalty = missingIngredients.length * 12 + missingTools.length * 20;
+  const matchScore = Math.max(0, Math.min(100, baseScore + optionalScore + expiryScore + timeScore - penalty));
+
+  return {
+    meal: mealIdea,
+    allowed,
+    availableIngredients: [...availableRequired, ...availableOptional],
+    missingIngredients,
+    matchScore,
+    reason: suggestionReason(mealIdea, missingIngredients, expiringUsed)
+  };
+}
+
+function suggestionReason(mealIdea, missingIngredients, expiringUsed) {
+  if (expiringUsed.length > 0) return `Uses ${expiringUsed[0]} before it expires and is ready in ${mealIdea.timeMinutes} minutes.`;
+  if (missingIngredients.length === 0) return `You have the core ingredients and it is ready in ${mealIdea.timeMinutes} minutes.`;
+  return `Needs ${missingIngredients.length} more item${missingIngredients.length === 1 ? "" : "s"}: ${missingIngredients.join(", ")}.`;
+}
+
+function shoppingGaps(suggestions) {
+  const gapMap = new Map();
+  suggestions.forEach((suggestion) => {
+    suggestion.missingIngredients.forEach((name) => {
+      const existing = gapMap.get(name) || { name, count: 0, meals: [] };
+      existing.count += 1;
+      existing.meals.push(suggestion.meal.title);
+      gapMap.set(name, existing);
+    });
+  });
+  return [...gapMap.values()].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+}
+
+function readKitchenConstraints() {
+  return {
+    maxTimeMinutes: Number(document.querySelector("#maxTimeMinutes").value),
+    effortLevel: document.querySelector("#effortLevel").value,
+    dietMode: document.querySelector("#dietMode").value,
+    spiceMode: document.querySelector("#spiceMode").value,
+    tools: [...document.querySelectorAll("[name='kitchenTools']:checked")].map((item) => item.value)
+  };
+}
+
+function hasIngredient(name) {
+  return Boolean(findIngredientByName(name));
+}
+
+function findIngredientByName(name) {
+  const target = normalizeIngredient(name);
+  return state.ingredients.find((item) => {
+    const source = normalizeIngredient(item.name);
+    return source === target || source.includes(target) || target.includes(source);
+  });
+}
+
+function ingredientSortValue(item) {
+  if (!item.expiresAt) return Number.MAX_SAFE_INTEGER;
+  return daysUntil(item.expiresAt);
+}
+
+function ingredientMeta(item) {
+  const parts = [item.quantityLabel, item.category, item.location].filter(Boolean);
+  if (item.expiresAt) parts.push(formatDueText(item.expiresAt));
+  return parts.join(" / ");
+}
+
+function kitchenCopy(count) {
+  if (state.kitchenFilter === "saved") return `${count} saved meal${count === 1 ? "" : "s"}.`;
+  if (count === 0) return "No suggestions match the current ingredients and constraints.";
+  return `${count} realistic option${count === 1 ? "" : "s"} ranked by fit.`;
+}
+
 function saveCostFromForm(event) {
   event.preventDefault();
 
@@ -760,8 +1231,39 @@ function persistCosts() {
   localStorage.setItem(COST_STORAGE_KEY, JSON.stringify(state.costs));
 }
 
+function persistKitchen() {
+  localStorage.setItem(INGREDIENT_STORAGE_KEY, JSON.stringify(state.ingredients));
+  localStorage.setItem(SAVED_MEAL_STORAGE_KEY, JSON.stringify(state.savedMealIds));
+  localStorage.setItem(DISMISSED_MEAL_STORAGE_KEY, JSON.stringify(state.dismissedMealIds));
+}
+
 function mergeById(current, incoming) {
   return [...current, ...incoming.filter((item) => !current.some((existing) => existing.id === item.id))];
+}
+
+function ingredient(id, name, category, quantityLabel, expiresAt, location) {
+  return {
+    id,
+    name,
+    category,
+    quantityLabel,
+    expiresAt,
+    location
+  };
+}
+
+function meal(id, title, requiredIngredients, optionalIngredients, timeMinutes, difficulty, tools, tags, instructions) {
+  return {
+    id,
+    title,
+    requiredIngredients,
+    optionalIngredients,
+    timeMinutes,
+    difficulty,
+    tools,
+    tags,
+    instructions
+  };
 }
 
 function step(title, note = "", optional = false) {
@@ -831,6 +1333,10 @@ function clean(value) {
 
 function slug(value) {
   return clean(value).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || String(Date.now());
+}
+
+function normalizeIngredient(value) {
+  return clean(value).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 }
 
 function escapeHtml(value) {
