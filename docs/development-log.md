@@ -65,6 +65,42 @@ GitHub sync:
 
 - Pushed commit to `main`.
 
+### 2026-06-29 - Settings, Language, and Currency
+
+Commit: `Add app settings for language and currency`
+
+Added a settings surface so LifeOps can store global preferences instead of hard-coding one locale and one default currency.
+
+Implemented:
+
+- Header settings button and modal preference panel
+- Persistent language setting with English and Chinese support
+- Localized core navigation, forms, summaries, filters, buttons, dynamic list copy, dates, and money formatting
+- Preferred currency setting saved in `localStorage`
+- 24 major global currencies across settings and recurring-cost forms
+- Preferred currency as the default for new recurring costs
+- Cost summary totals scoped to the selected currency without auto-converting existing records
+- Settings note explaining that existing cost items keep their saved currency
+
+Verification:
+
+- `node --check app.js`
+- Browser interaction check:
+  - Open settings
+  - Confirm language and currency controls render
+  - Switch language to Chinese
+  - Confirm header, settings panel, tabs, and primary form controls localize
+  - Switch preferred currency to CNY
+  - Confirm recurring-cost form default currency updates
+  - Confirm no browser console errors
+- Built `build/LifeOps.app` with `scripts/build-macos-app.sh`
+- Confirmed app bundle resources include updated `app.js`, `index.html`, and `styles.css`
+- Confirmed `Info.plist` still includes the app icon metadata
+
+GitHub sync:
+
+- Pushed commit to `main`.
+
 ### 2026-06-29 - App Icon Design
 
 Commit: `Design and bundle app icon`

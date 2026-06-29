@@ -22,6 +22,7 @@
       <div class="header-actions" aria-label="App actions">
         <button class="icon-button" id="seedButton" type="button" title="Load example data" aria-label="Load example data">+</button>
         <button class="icon-button" id="clearButton" type="button" title="Clear current module data" aria-label="Clear current module data">x</button>
+        <button class="icon-button" id="settingsButton" type="button" title="Settings" aria-label="Settings">⚙</button>
       </div>
     </header>
 
@@ -325,12 +326,7 @@
                 </label>
                 <label>
                   Currency
-                  <select id="currency" name="currency">
-                    <option value="USD">USD</option>
-                    <option value="GBP">GBP</option>
-                    <option value="EUR">EUR</option>
-                    <option value="CNY">CNY</option>
-                  </select>
+                  <select id="currency" name="currency"></select>
                 </label>
               </div>
 
@@ -418,6 +414,35 @@
         </section>
       </section>
     </main>
+
+    <div class="settings-backdrop hidden" id="settingsDialog" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <section class="settings-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow" id="settingsEyebrow">Preferences</p>
+            <h2 id="settingsTitle">Settings</h2>
+          </div>
+          <button class="icon-button" id="closeSettingsButton" type="button" title="Close settings" aria-label="Close settings">x</button>
+        </div>
+
+        <div class="settings-grid">
+          <label>
+            <span id="languageLabel">Language</span>
+            <select id="languageSelect">
+              <option value="en">English</option>
+              <option value="zh">中文</option>
+            </select>
+          </label>
+
+          <label>
+            <span id="preferredCurrencyLabel">Preferred currency</span>
+            <select id="preferredCurrency"></select>
+          </label>
+        </div>
+
+        <p class="settings-note" id="currencyNote">Currency controls new cost defaults and summary totals. Existing cost items keep their saved currency and are not auto-converted.</p>
+      </section>
+    </div>
 
     <template id="emptyTemplate">
       <div class="empty-state">

@@ -34,6 +34,12 @@ The first MVP can be built as a local-first web or mobile app with:
 
 The working MVP prototype now includes `Routine Playbooks`, `Kitchen Now`, and `Recurring Costs`. Open `index.html` in a browser to use it.
 
+Global app settings currently support:
+
+- Language switching between English and Chinese
+- Preferred currency selection across major global currencies
+- Currency-aware recurring-cost summaries and new cost defaults
+
 Each module has a theme-matched interface:
 
 - Routine Playbooks uses a warmer checklist/workflow palette.
@@ -52,6 +58,7 @@ Routine Playbooks currently supports:
 Recurring Costs currently supports:
 
 - Manual recurring cost entry
+- Major global currency options
 - Edit and delete
 - Upcoming renewal timeline
 - Trial, active, paused, and canceled statuses
