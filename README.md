@@ -60,6 +60,7 @@ index.html
 styles.css
 app.js
 docs/
+  development-log.md
   design/
     product-overview.md
   tasks/
@@ -71,3 +72,7 @@ docs/
 ## Next Step
 
 Add the `Kitchen Now` module, then turn the static prototype into a production app shell with tests, routing, and a durable storage layer.
+
+## Development Process
+
+Development history and sync rules are recorded in `docs/development-log.md`.
