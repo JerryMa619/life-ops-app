@@ -209,3 +209,36 @@ Verification:
 GitHub sync:
 
 - Pushed commit to `main`.
+
+### 2026-06-29 - Module-Themed UI
+
+Commit: `Theme modules by product area`
+
+Updated the LifeOps interface so each module feels more aligned with its purpose while staying inside one coherent product system.
+
+Implemented:
+
+- Theme switching through `body[data-theme]`
+- Warmer checklist/workflow palette for Routine Playbooks
+- Fresh kitchen and ingredient palette for Kitchen Now
+- Finance-focused blue palette for Recurring Costs
+- Theme-aware header, tabs, metrics, cards, badges, controls, and focus states
+- Module-specific card accents for playbooks, meals, ingredients, and costs
+
+Verification:
+
+- `node --check app.js`
+- `git diff --check`
+- ASCII content check
+- Browser interaction check:
+  - Load app
+  - Switch to Playbooks, Kitchen, Costs, and back to Playbooks
+  - Confirm body theme, heading, active tab, background color, accent color, and soft panel color
+  - Confirm no browser console errors
+- Built `build/LifeOps.app` with `scripts/build-macos-app.sh`
+- Confirmed app bundle structure
+- Opened `LifeOps.app`
+
+GitHub sync:
+
+- Pushed commit to `main`.

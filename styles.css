@@ -11,7 +11,59 @@
   --amber: #b06612;
   --red: #b33a3a;
   --blue: #2f6690;
+  --header-bg: #fbfbf8;
+  --card-tint: #fbfcfa;
+  --theme-line: rgba(31, 122, 87, 0.24);
+  --theme-shadow: rgba(30, 37, 40, 0.08);
   --shadow: 0 16px 36px rgba(30, 37, 40, 0.08);
+}
+
+body[data-theme="playbooks"] {
+  --bg: #f6f4ed;
+  --ink: #242620;
+  --muted: #69685f;
+  --line: #ddd8ca;
+  --panel-soft: #f1eddf;
+  --green: #6f6138;
+  --green-dark: #4d4326;
+  --amber: #a7652b;
+  --blue: #536f87;
+  --header-bg: #fbfaf5;
+  --card-tint: #fdfbf4;
+  --theme-line: rgba(111, 97, 56, 0.28);
+  --theme-shadow: rgba(77, 67, 38, 0.09);
+}
+
+body[data-theme="kitchen"] {
+  --bg: #f5faf4;
+  --ink: #1e2a24;
+  --muted: #5c6d61;
+  --line: #d4e2d3;
+  --panel-soft: #edf7ee;
+  --green: #2f7d5c;
+  --green-dark: #215d44;
+  --amber: #b46b1f;
+  --blue: #3b7280;
+  --header-bg: #fbfef9;
+  --card-tint: #f8fdf7;
+  --theme-line: rgba(47, 125, 92, 0.26);
+  --theme-shadow: rgba(33, 93, 68, 0.09);
+}
+
+body[data-theme="costs"] {
+  --bg: #f5f8fa;
+  --ink: #20272c;
+  --muted: #5f6970;
+  --line: #d4dde3;
+  --panel-soft: #edf5fa;
+  --green: #2f6690;
+  --green-dark: #214a69;
+  --amber: #ac721c;
+  --blue: #2f6690;
+  --header-bg: #fbfdff;
+  --card-tint: #f7fbfd;
+  --theme-line: rgba(47, 102, 144, 0.28);
+  --theme-shadow: rgba(33, 74, 105, 0.09);
 }
 
 * {
@@ -24,6 +76,7 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  transition: background-color 160ms ease, color 160ms ease;
 }
 
 button,
@@ -44,7 +97,8 @@ button {
   gap: 24px;
   padding: 28px clamp(18px, 4vw, 48px) 18px;
   border-bottom: 1px solid var(--line);
-  background: #fbfbf8;
+  background: var(--header-bg);
+  box-shadow: inset 0 -3px 0 var(--theme-line);
 }
 
 .title-block {
@@ -97,6 +151,7 @@ h2 {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel);
+  box-shadow: 0 8px 20px var(--theme-shadow);
 }
 
 .module-tab {
@@ -155,9 +210,10 @@ h2 {
   min-height: 126px;
   padding: 18px;
   border: 1px solid var(--line);
+  border-top: 4px solid var(--green);
   border-radius: 8px;
   background: var(--panel);
-  box-shadow: var(--shadow);
+  box-shadow: 0 16px 36px var(--theme-shadow);
 }
 
 .metric-label,
@@ -172,6 +228,7 @@ h2 {
   margin: 12px 0 8px;
   font-size: clamp(1.5rem, 3vw, 2.35rem);
   line-height: 1;
+  color: var(--green-dark);
 }
 
 .workspace-grid {
@@ -186,7 +243,7 @@ h2 {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--panel);
-  box-shadow: var(--shadow);
+  box-shadow: 0 16px 36px var(--theme-shadow);
 }
 
 .editor-panel {
@@ -272,6 +329,7 @@ textarea:focus {
   gap: 16px;
   padding: 18px;
   border-bottom: 1px solid var(--line);
+  background: var(--card-tint);
 }
 
 .toolbar p {
@@ -306,6 +364,7 @@ textarea:focus {
   gap: 18px;
   padding: 18px;
   border-bottom: 1px solid var(--line);
+  border-left: 4px solid transparent;
 }
 
 .cost-card:last-child {
@@ -314,6 +373,28 @@ textarea:focus {
 
 .playbook-card {
   align-items: start;
+  border-left-color: var(--green);
+}
+
+body[data-theme="kitchen"] .meal-card,
+body[data-theme="kitchen"] .ingredient-card {
+  border-left-color: var(--green);
+}
+
+body[data-theme="costs"] #costList .cost-card {
+  border-left-color: var(--blue);
+}
+
+body[data-theme="playbooks"] .progress-track {
+  background: #e6dfce;
+}
+
+body[data-theme="kitchen"] .chip.available {
+  background: #e8f6e9;
+}
+
+body[data-theme="costs"] .cost-amount strong {
+  color: var(--blue);
 }
 
 .cost-main {
@@ -346,7 +427,7 @@ textarea:focus {
   padding: 0 8px;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: #f9faf8;
+  background: var(--card-tint);
   color: var(--muted);
   font-size: 0.74rem;
   font-weight: 800;
@@ -422,7 +503,7 @@ textarea:focus {
   padding: 10px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fbfcfa;
+  background: var(--card-tint);
   color: var(--ink);
   font-size: 0.9rem;
   font-weight: 500;
@@ -474,7 +555,7 @@ textarea:focus {
   padding: 8px 10px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fbfcfa;
+  background: var(--card-tint);
   color: var(--ink);
   font-size: 0.84rem;
   font-weight: 700;
@@ -500,7 +581,7 @@ textarea:focus {
   padding: 10px;
   border: 1px solid var(--line);
   border-radius: 8px;
-  background: #fbfcfa;
+  background: var(--card-tint);
 }
 
 .ingredient-card strong,

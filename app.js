@@ -325,6 +325,7 @@ render();
 
 function switchModule(moduleName) {
   state.module = moduleName;
+  document.body.dataset.theme = moduleName;
   elements.moduleTabs.forEach((button) => {
     button.classList.toggle("active", button.dataset.module === moduleName);
   });

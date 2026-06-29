@@ -34,6 +34,12 @@ The first MVP can be built as a local-first web or mobile app with:
 
 The working MVP prototype now includes `Routine Playbooks`, `Kitchen Now`, and `Recurring Costs`. Open `index.html` in a browser to use it.
 
+Each module has a theme-matched interface:
+
+- Routine Playbooks uses a warmer checklist/workflow palette.
+- Kitchen Now uses fresher kitchen and ingredient tones.
+- Recurring Costs uses a quieter finance-focused blue palette.
+
 Routine Playbooks currently supports:
 
 - Manual playbook template creation
