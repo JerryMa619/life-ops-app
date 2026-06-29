@@ -65,12 +65,34 @@ Kitchen Now currently supports:
 - Saved and dismissed meal ideas
 - Browser-local persistence with `localStorage`
 
+## Desktop App
+
+LifeOps can now be built as a macOS desktop app. The app uses a small native Cocoa/WebKit shell and bundles the local LifeOps resources, so it opens as `LifeOps.app` without a browser address bar or local web server.
+
+Build it with:
+
+```bash
+scripts/build-macos-app.sh
+```
+
+The built app is created at:
+
+```text
+build/LifeOps.app
+```
+
 ## Project Structure
 
 ```text
 index.html
 styles.css
 app.js
+scripts/
+  build-macos-app.sh
+macos/
+  LifeOpsApp/
+    Info.plist
+    main.swift
 docs/
   development-log.md
   design/

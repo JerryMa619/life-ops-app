@@ -155,3 +155,29 @@ GitHub sync:
 
 - Pushed commit to `main`.
 - Commented progress on Issue #2.
+
+### 2026-06-29 - macOS Desktop App Shell
+
+Commit: `Build macOS desktop app shell`
+
+Converted the LifeOps prototype from a browser-only experience into a buildable macOS desktop app.
+
+Implemented:
+
+- Native Cocoa/WebKit app entry point
+- macOS app bundle metadata
+- Build script for `build/LifeOps.app`
+- Bundling of `index.html`, `styles.css`, and `app.js` as local app resources
+- README instructions for building the desktop app
+
+Verification:
+
+- Built `build/LifeOps.app` with `scripts/build-macos-app.sh`
+- Confirmed app bundle structure
+- Confirmed `Info.plist`
+- Confirmed `LifeOps` is an arm64 Mach-O executable
+- Opened `LifeOps.app`
+
+GitHub sync:
+
+- Pushed commit to `main`.
