@@ -30,9 +30,24 @@ The first MVP can be built as a local-first web or mobile app with:
 - Manual entry first, image/receipt/barcode automation later
 - Privacy-first storage for personal life data
 
+## Current Prototype
+
+The first working MVP prototype is `Recurring Costs`. Open `index.html` in a browser to use it. It currently supports:
+
+- Manual recurring cost entry
+- Edit and delete
+- Upcoming renewal timeline
+- Trial, active, paused, and canceled statuses
+- Monthly and annual spend estimates
+- Soon, trial, and review filters
+- Browser-local persistence with `localStorage`
+
 ## Project Structure
 
 ```text
+index.html
+styles.css
+app.js
 docs/
   design/
     product-overview.md
@@ -44,4 +59,4 @@ docs/
 
 ## Next Step
 
-Use the three task documents as GitHub issues and begin with low-fidelity UX wireframes for the most promising module.
+Turn the Recurring Costs prototype into a production app shell with tests, routing, and a durable storage layer.
