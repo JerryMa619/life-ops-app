@@ -64,6 +64,33 @@ Verification:
 GitHub sync:
 
 - Pushed commit to `main`.
+
+### 2026-06-29 - App Icon Design
+
+Commit: `Design and bundle app icon`
+
+Designed and bundled a custom LifeOps app icon so the desktop app has a recognizable product identity in Finder, Dock, and app launch surfaces.
+
+Implemented:
+
+- Generated a custom 1024px LifeOps source icon
+- Visual concept combines routine checklist, kitchen/ingredient leaf, and recurring-cost calendar cues
+- Added the source icon at `assets/lifeops-icon-1024.png`
+- Updated the macOS build script to generate a full `AppIcon.icns`
+- Added `CFBundleIconFile` metadata to the app bundle
+- Updated README desktop app and project structure notes
+
+Verification:
+
+- Normalized the source icon to 1024x1024
+- Built `build/LifeOps.app` with `scripts/build-macos-app.sh`
+- Confirmed `CFBundleIconFile` is set to `AppIcon`
+- Confirmed `AppIcon.icns` is present in the app resources
+- Confirmed generated iconset includes the 1024px Retina source
+
+GitHub sync:
+
+- Pushed commit to `main`.
 - Commented progress on Issue #1.
 - Enabled GitHub Pages.
 

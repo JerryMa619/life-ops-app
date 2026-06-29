@@ -77,6 +77,7 @@ LifeOps can now be built as a macOS desktop app. The app uses a small native Coc
 
 The desktop app includes:
 
+- Custom LifeOps app icon
 - Native macOS menu bar
 - About dialog
 - `Cmd+1`, `Cmd+2`, `Cmd+3` module switching
@@ -98,6 +99,8 @@ build/LifeOps.app
 ## Project Structure
 
 ```text
+assets/
+  lifeops-icon-1024.png
 index.html
 styles.css
 app.js
