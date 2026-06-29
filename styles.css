@@ -47,6 +47,10 @@ button {
   background: #fbfbf8;
 }
 
+.title-block {
+  min-width: min(280px, 100%);
+}
+
 .eyebrow {
   margin: 0 0 4px;
   color: var(--green-dark);
@@ -75,6 +79,7 @@ h2 {
 }
 
 .header-actions,
+.module-tabs,
 .filters,
 .panel-heading,
 .toolbar {
@@ -84,6 +89,30 @@ h2 {
 
 .header-actions {
   gap: 10px;
+}
+
+.module-tabs {
+  gap: 8px;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.module-tab {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.module-tab.active {
+  border-color: rgba(31, 122, 87, 0.28);
+  background: var(--panel-soft);
+  color: var(--green-dark);
 }
 
 .icon-button {
@@ -109,6 +138,10 @@ h2 {
   width: min(1440px, 100%);
   margin: 0 auto;
   padding: 24px clamp(14px, 3vw, 48px) 48px;
+}
+
+.hidden {
+  display: none !important;
 }
 
 .summary-band {
@@ -279,6 +312,10 @@ textarea:focus {
   border-bottom: 0;
 }
 
+.playbook-card {
+  align-items: start;
+}
+
 .cost-main {
   min-width: 0;
 }
@@ -354,6 +391,62 @@ textarea:focus {
   font-size: 0.9rem;
 }
 
+.progress-track {
+  width: min(520px, 100%);
+  height: 9px;
+  margin-top: 14px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e7ece7;
+}
+
+.progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--green);
+}
+
+.step-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.step-item {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  width: min(640px, 100%);
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcfa;
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.step-item input {
+  width: 18px;
+  min-height: 18px;
+  margin-top: 1px;
+  accent-color: var(--green);
+}
+
+.step-item strong,
+.step-item small {
+  display: block;
+}
+
+.step-item small {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
 .cost-side {
   display: grid;
   justify-items: end;
@@ -378,6 +471,32 @@ textarea:focus {
 
 .cost-actions {
   justify-content: flex-end;
+}
+
+.button-stack {
+  display: grid;
+  gap: 8px;
+  justify-items: stretch;
+  width: 128px;
+}
+
+.small-command {
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.small-command:hover {
+  border-color: var(--green);
+}
+
+.small-command.danger {
+  color: var(--red);
 }
 
 .mini-button {
@@ -434,6 +553,7 @@ textarea:focus {
   }
 
   .header-actions,
+  .module-tabs,
   .filters {
     justify-content: flex-start;
   }
@@ -450,6 +570,11 @@ textarea:focus {
   .cost-side {
     justify-items: start;
     min-width: 0;
+  }
+
+  .button-stack {
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .cost-amount {

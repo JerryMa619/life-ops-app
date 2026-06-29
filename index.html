@@ -3,163 +3,278 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>LifeOps - Recurring Costs MVP</title>
+    <title>LifeOps - Practical Life MVP</title>
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
     <header class="app-header">
-      <div>
+      <div class="title-block">
         <p class="eyebrow">LifeOps MVP</p>
-        <h1>Recurring Costs</h1>
+        <h1 id="appTitle">Routine Playbooks</h1>
       </div>
+
+      <nav class="module-tabs" aria-label="LifeOps modules">
+        <button class="module-tab active" type="button" data-module="playbooks">Playbooks</button>
+        <button class="module-tab" type="button" data-module="costs">Costs</button>
+      </nav>
+
       <div class="header-actions" aria-label="App actions">
         <button class="icon-button" id="seedButton" type="button" title="Load example data" aria-label="Load example data">+</button>
-        <button class="icon-button" id="clearButton" type="button" title="Clear local data" aria-label="Clear local data">x</button>
+        <button class="icon-button" id="clearButton" type="button" title="Clear current module data" aria-label="Clear current module data">x</button>
       </div>
     </header>
 
     <main class="app-shell">
-      <section class="summary-band" aria-label="Cost summary">
-        <article class="metric">
-          <span class="metric-label">Monthly estimate</span>
-          <strong id="monthlyTotal">$0</strong>
-          <small>Normalized recurring spend</small>
-        </article>
-        <article class="metric">
-          <span class="metric-label">Annual estimate</span>
-          <strong id="annualTotal">$0</strong>
-          <small>Active and trial items</small>
-        </article>
-        <article class="metric">
-          <span class="metric-label">Charging soon</span>
-          <strong id="soonCount">0</strong>
-          <small>Due in the next 14 days</small>
-        </article>
-        <article class="metric">
-          <span class="metric-label">Possible cuts</span>
-          <strong id="reviewCount">0</strong>
-          <small>Paused, trial, or flagged</small>
-        </article>
+      <section class="module-view" id="playbooksView" aria-label="Routine Playbooks">
+        <section class="summary-band" aria-label="Playbook summary">
+          <article class="metric">
+            <span class="metric-label">Templates</span>
+            <strong id="playbookTemplateCount">0</strong>
+            <small>Reusable life scenarios</small>
+          </article>
+          <article class="metric">
+            <span class="metric-label">Active runs</span>
+            <strong id="activeRunCount">0</strong>
+            <small>Checklists in motion</small>
+          </article>
+          <article class="metric">
+            <span class="metric-label">Due soon</span>
+            <strong id="playbookDueSoonCount">0</strong>
+            <small>Due in the next 7 days</small>
+          </article>
+          <article class="metric">
+            <span class="metric-label">Completion</span>
+            <strong id="completionAverage">0%</strong>
+            <small>Average active progress</small>
+          </article>
+        </section>
+
+        <section class="workspace-grid">
+          <aside class="editor-panel" aria-label="Playbook editor">
+            <div class="panel-heading">
+              <h2 id="playbookFormTitle">Add playbook</h2>
+              <button class="text-button" id="resetPlaybookFormButton" type="button">Reset</button>
+            </div>
+
+            <form id="playbookForm">
+              <input id="playbookId" type="hidden">
+
+              <label>
+                Title
+                <input id="playbookTitle" name="title" type="text" placeholder="Travel packing, Weekly home reset" required>
+              </label>
+
+              <div class="form-row">
+                <label>
+                  Category
+                  <select id="playbookCategory" name="category">
+                    <option value="Home">Home</option>
+                    <option value="Travel">Travel</option>
+                    <option value="Health">Health</option>
+                    <option value="Pet">Pet</option>
+                    <option value="Maintenance">Maintenance</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </label>
+                <label>
+                  Repeat
+                  <select id="repeatRule" name="repeatRule">
+                    <option value="none">None</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="quarterly">Quarterly</option>
+                    <option value="yearly">Yearly</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="form-row">
+                <label>
+                  Due date
+                  <input id="playbookDueDate" name="dueDate" type="date">
+                </label>
+                <label>
+                  Reminder days
+                  <input id="defaultReminderOffsetDays" name="defaultReminderOffsetDays" type="number" min="0" step="1" placeholder="2">
+                </label>
+              </div>
+
+              <label>
+                Description
+                <textarea id="playbookDescription" name="description" rows="3" placeholder="What this checklist is for"></textarea>
+              </label>
+
+              <label>
+                Steps
+                <textarea id="playbookSteps" name="steps" rows="7" placeholder="One step per line. Use title | note for extra detail." required></textarea>
+              </label>
+
+              <button class="primary-button" type="submit">Save playbook</button>
+            </form>
+          </aside>
+
+          <section class="main-panel" aria-label="Playbook list">
+            <div class="toolbar">
+              <div>
+                <h2>Playbook runs</h2>
+                <p id="playbookSubcopy">Active playbooks first, templates after.</p>
+              </div>
+              <div class="filters" aria-label="Playbook filters">
+                <button class="filter-button active" data-playbook-filter="all" type="button">All</button>
+                <button class="filter-button" data-playbook-filter="active" type="button">Active</button>
+                <button class="filter-button" data-playbook-filter="due" type="button">Due</button>
+                <button class="filter-button" data-playbook-filter="templates" type="button">Templates</button>
+              </div>
+            </div>
+
+            <div class="list" id="playbookList" aria-live="polite"></div>
+          </section>
+        </section>
       </section>
 
-      <section class="workspace-grid">
-        <aside class="editor-panel" aria-label="Recurring cost editor">
-          <div class="panel-heading">
-            <h2 id="formTitle">Add recurring cost</h2>
-            <button class="text-button" id="resetFormButton" type="button">Reset</button>
-          </div>
+      <section class="module-view hidden" id="costsView" aria-label="Recurring Costs">
+        <section class="summary-band" aria-label="Cost summary">
+          <article class="metric">
+            <span class="metric-label">Monthly estimate</span>
+            <strong id="monthlyTotal">$0</strong>
+            <small>Normalized recurring spend</small>
+          </article>
+          <article class="metric">
+            <span class="metric-label">Annual estimate</span>
+            <strong id="annualTotal">$0</strong>
+            <small>Active and trial items</small>
+          </article>
+          <article class="metric">
+            <span class="metric-label">Charging soon</span>
+            <strong id="soonCount">0</strong>
+            <small>Due in the next 14 days</small>
+          </article>
+          <article class="metric">
+            <span class="metric-label">Possible cuts</span>
+            <strong id="reviewCount">0</strong>
+            <small>Paused, trial, or flagged</small>
+          </article>
+        </section>
 
-          <form id="costForm">
-            <input id="costId" type="hidden">
-
-            <label>
-              Name
-              <input id="name" name="name" type="text" placeholder="iCloud, Netflix, Gym" required>
-            </label>
-
-            <div class="form-row">
-              <label>
-                Amount
-                <input id="amount" name="amount" type="number" min="0" step="0.01" placeholder="9.99" required>
-              </label>
-              <label>
-                Currency
-                <select id="currency" name="currency">
-                  <option value="USD">USD</option>
-                  <option value="GBP">GBP</option>
-                  <option value="EUR">EUR</option>
-                  <option value="CNY">CNY</option>
-                </select>
-              </label>
+        <section class="workspace-grid">
+          <aside class="editor-panel" aria-label="Recurring cost editor">
+            <div class="panel-heading">
+              <h2 id="costFormTitle">Add recurring cost</h2>
+              <button class="text-button" id="resetCostFormButton" type="button">Reset</button>
             </div>
 
-            <div class="form-row">
+            <form id="costForm">
+              <input id="costId" type="hidden">
+
               <label>
-                Billing cycle
-                <select id="billingCycle" name="billingCycle">
-                  <option value="monthly">Monthly</option>
-                  <option value="weekly">Weekly</option>
-                  <option value="quarterly">Quarterly</option>
-                  <option value="yearly">Yearly</option>
-                  <option value="custom">Custom</option>
-                </select>
+                Name
+                <input id="name" name="name" type="text" placeholder="iCloud, Netflix, Gym" required>
               </label>
+
+              <div class="form-row">
+                <label>
+                  Amount
+                  <input id="amount" name="amount" type="number" min="0" step="0.01" placeholder="9.99" required>
+                </label>
+                <label>
+                  Currency
+                  <select id="currency" name="currency">
+                    <option value="USD">USD</option>
+                    <option value="GBP">GBP</option>
+                    <option value="EUR">EUR</option>
+                    <option value="CNY">CNY</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="form-row">
+                <label>
+                  Billing cycle
+                  <select id="billingCycle" name="billingCycle">
+                    <option value="monthly">Monthly</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="quarterly">Quarterly</option>
+                    <option value="yearly">Yearly</option>
+                    <option value="custom">Custom</option>
+                  </select>
+                </label>
+                <label>
+                  Next charge
+                  <input id="nextChargeDate" name="nextChargeDate" type="date" required>
+                </label>
+              </div>
+
+              <div class="form-row">
+                <label>
+                  Category
+                  <select id="category" name="category">
+                    <option value="Streaming">Streaming</option>
+                    <option value="Software">Software</option>
+                    <option value="Storage">Storage</option>
+                    <option value="Fitness">Fitness</option>
+                    <option value="Insurance">Insurance</option>
+                    <option value="Utilities">Utilities</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </label>
+                <label>
+                  Status
+                  <select id="status" name="status">
+                    <option value="active">Active</option>
+                    <option value="trial">Trial</option>
+                    <option value="paused">Paused</option>
+                    <option value="canceled">Canceled</option>
+                  </select>
+                </label>
+              </div>
+
               <label>
-                Next charge
-                <input id="nextChargeDate" name="nextChargeDate" type="date" required>
+                Reminder offsets
+                <input id="reminderOffsets" name="reminderOffsets" type="text" placeholder="7, 1">
               </label>
+
+              <label>
+                Payment method label
+                <input id="paymentMethodLabel" name="paymentMethodLabel" type="text" placeholder="Visa ending 1234">
+              </label>
+
+              <label>
+                Cancellation URL
+                <input id="cancellationUrl" name="cancellationUrl" type="url" placeholder="https://...">
+              </label>
+
+              <label>
+                Notes
+                <textarea id="notes" name="notes" rows="4" placeholder="Plan details, login email, why to keep or cancel"></textarea>
+              </label>
+
+              <button class="primary-button" type="submit">Save cost</button>
+            </form>
+          </aside>
+
+          <section class="main-panel" aria-label="Recurring cost list">
+            <div class="toolbar">
+              <div>
+                <h2>Renewal timeline</h2>
+                <p id="timelineSubcopy">Upcoming charges ordered by date.</p>
+              </div>
+              <div class="filters" aria-label="List filters">
+                <button class="filter-button active" data-cost-filter="all" type="button">All</button>
+                <button class="filter-button" data-cost-filter="soon" type="button">Soon</button>
+                <button class="filter-button" data-cost-filter="trial" type="button">Trials</button>
+                <button class="filter-button" data-cost-filter="review" type="button">Review</button>
+              </div>
             </div>
 
-            <div class="form-row">
-              <label>
-                Category
-                <select id="category" name="category">
-                  <option value="Streaming">Streaming</option>
-                  <option value="Software">Software</option>
-                  <option value="Storage">Storage</option>
-                  <option value="Fitness">Fitness</option>
-                  <option value="Insurance">Insurance</option>
-                  <option value="Utilities">Utilities</option>
-                  <option value="Other">Other</option>
-                </select>
-              </label>
-              <label>
-                Status
-                <select id="status" name="status">
-                  <option value="active">Active</option>
-                  <option value="trial">Trial</option>
-                  <option value="paused">Paused</option>
-                  <option value="canceled">Canceled</option>
-                </select>
-              </label>
-            </div>
-
-            <label>
-              Reminder offsets
-              <input id="reminderOffsets" name="reminderOffsets" type="text" placeholder="7, 1">
-            </label>
-
-            <label>
-              Payment method label
-              <input id="paymentMethodLabel" name="paymentMethodLabel" type="text" placeholder="Visa ending 1234">
-            </label>
-
-            <label>
-              Cancellation URL
-              <input id="cancellationUrl" name="cancellationUrl" type="url" placeholder="https://...">
-            </label>
-
-            <label>
-              Notes
-              <textarea id="notes" name="notes" rows="4" placeholder="Plan details, login email, why to keep or cancel"></textarea>
-            </label>
-
-            <button class="primary-button" type="submit">Save cost</button>
-          </form>
-        </aside>
-
-        <section class="main-panel" aria-label="Recurring cost list">
-          <div class="toolbar">
-            <div>
-              <h2>Renewal timeline</h2>
-              <p id="timelineSubcopy">Upcoming charges ordered by date.</p>
-            </div>
-            <div class="filters" aria-label="List filters">
-              <button class="filter-button active" data-filter="all" type="button">All</button>
-              <button class="filter-button" data-filter="soon" type="button">Soon</button>
-              <button class="filter-button" data-filter="trial" type="button">Trials</button>
-              <button class="filter-button" data-filter="review" type="button">Review</button>
-            </div>
-          </div>
-
-          <div class="list" id="costList" aria-live="polite"></div>
+            <div class="list" id="costList" aria-live="polite"></div>
+          </section>
         </section>
       </section>
     </main>
 
     <template id="emptyTemplate">
       <div class="empty-state">
-        <h3>No recurring costs yet</h3>
+        <h3>No items yet</h3>
         <p>Add the first item or load example data to see how the MVP works.</p>
       </div>
     </template>

@@ -32,7 +32,18 @@ The first MVP can be built as a local-first web or mobile app with:
 
 ## Current Prototype
 
-The first working MVP prototype is `Recurring Costs`. Open `index.html` in a browser to use it. It currently supports:
+The working MVP prototype now includes `Routine Playbooks` and `Recurring Costs`. Open `index.html` in a browser to use it.
+
+Routine Playbooks currently supports:
+
+- Manual playbook template creation
+- Built-in example templates
+- Start, complete, and reset playbook runs
+- Step-level checklist progress
+- Duplicate, edit, and delete
+- Local persistence with `localStorage`
+
+Recurring Costs currently supports:
 
 - Manual recurring cost entry
 - Edit and delete
@@ -59,4 +70,4 @@ docs/
 
 ## Next Step
 
-Turn the Recurring Costs prototype into a production app shell with tests, routing, and a durable storage layer.
+Add the `Kitchen Now` module, then turn the static prototype into a production app shell with tests, routing, and a durable storage layer.
