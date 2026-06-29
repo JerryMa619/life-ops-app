@@ -69,6 +69,14 @@ Kitchen Now currently supports:
 
 LifeOps can now be built as a macOS desktop app. The app uses a small native Cocoa/WebKit shell and bundles the local LifeOps resources, so it opens as `LifeOps.app` without a browser address bar or local web server.
 
+The desktop app includes:
+
+- Native macOS menu bar
+- About dialog
+- `Cmd+1`, `Cmd+2`, `Cmd+3` module switching
+- `Cmd+R` reload
+- `Cmd+E` JSON data export
+
 Build it with:
 
 ```bash

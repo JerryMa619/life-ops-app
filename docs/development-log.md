@@ -181,3 +181,31 @@ Verification:
 GitHub sync:
 
 - Pushed commit to `main`.
+
+### 2026-06-29 - macOS App Polish
+
+Commit: `Polish macOS app menus`
+
+Improved the desktop app shell so LifeOps feels more like a native macOS app instead of only a bundled web view.
+
+Implemented:
+
+- Native menu bar
+- About LifeOps dialog
+- Export Data menu item
+- JSON export from bundled `localStorage`
+- `Cmd+1`, `Cmd+2`, and `Cmd+3` module switching
+- `Cmd+R` reload
+- Standard Quit, Minimize, and Zoom menu items
+
+Verification:
+
+- Built `build/LifeOps.app` with `scripts/build-macos-app.sh`
+- Confirmed app bundle structure
+- Confirmed `Info.plist`
+- Confirmed `LifeOps` is an arm64 Mach-O executable
+- Opened `LifeOps.app`
+
+GitHub sync:
+
+- Pushed commit to `main`.
